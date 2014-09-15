@@ -5,35 +5,26 @@
  * Version 1.0.0, 2014-09-14
  * By Jorge Castro
  * https://github.com/nikeyes/JsMeter
- * Use Execute for modern browsers
- * Use ExecuteOldSchool for compatibility with < IE10 Chome20, Firefox15 : https://developer.mozilla.org/en-US/docs/Web/API/Performance.now
  * 
  */
 (function (ns) {
     "use strict";
     var JsMeter = function () {
+        /*Compatibility with < IE10 Chome20, Firefox15 : https://developer.mozilla.org/en-US/docs/Web/API/Performance.now
+         * Based on: http://gent.ilcore.com/2012/06/better-timer-for-javascript.html
+        */
+        ns.performance = window.performance || {};
+        ns.performance.now = performance.now ||
+                   performance.mozNow ||
+                   performance.msNow ||
+                   performance.oNow ||
+                   performance.webkitNow ||
+                   function () { return new Date().getTime(); };
     };
 
     JsMeter.prototype = {
         constructor: JsMeter,
 
-        ExecuteOldSchool: function (testFunction, iterations) {
-            var start,
-                end,
-                lapseTime;
-
-            start = new Date().getTime();
-
-            for (var i = 0; i < iterations; i++) {
-                testFunction();
-            }
-
-            end = new Date().getTime();
-
-            lapseTime = end - start;
-
-            return lapseTime;
-        },
         Execute: function (testFunction, iterations) {
             var start,
                 end,
