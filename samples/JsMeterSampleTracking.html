@@ -1,0 +1,47 @@
+<html>
+<head>
+    <title>Test JsMeter</title>
+    <script language="javascript" src="../src/JsMeter.js"></script>
+
+</head>
+<body>
+    <div id="resultsDiv"></div>
+    <script language="javascript">
+
+        /*Sample performance function with parameters*/
+
+        var globalArray = [1, 2, 3, 4, 5, 6, 7, 8, 9, 1, 2, 3, 4, 5, 6, 7, 8, 9, 1, 2, 3, 4, 5, 6, 7, 8, 9, 1, 2, 3, 4, 5, 6, 7, 8, 9, 1, 2, 3, 4, 5, 6, 7, 8, 9, 1, 2, 3, 4, 5, 6, 7, 8, 9, 1, 2, 3, 4, 5, 6, 7, 8, 9, 1, 2, 3, 4, 5, 6, 7, 8, 9, 1, 2, 3, 4, 5, 6, 7, 8, 9, 1, 2, 3, 4, 5, 6, 7, 8, 9, 1, 2, 3, 4, 5, 6, 7, 8, 9, 1, 2, 3, 4, 5, 6, 7, 8, 9, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+
+
+        function SumArrayWithFor(pArray) {
+            var total,
+                arrayLength;
+
+            arrayLength = pArray.length;
+            JsMeter.StartTracking("For");
+            for (var i = 0; i < arrayLength; i++) {
+                total += pArray[i];
+            }
+            JsMeter.EndTracking();
+
+            JsMeter.StartTracking("ForIn");
+            for (var value in pArray) {
+                total += value;
+            }
+            JsMeter.EndTracking();
+
+            return total;
+        }
+
+        SumArrayWithFor(globalArray);
+
+
+        var results = JsMeter.GetTrackings();
+
+        var div = document.getElementById("resultsDiv");
+        div.innerHTML = results.toString();
+    </script>
+
+</body>
+</html>
+

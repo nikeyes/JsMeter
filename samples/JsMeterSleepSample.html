@@ -1,0 +1,28 @@
+<html>
+<head>
+    <title>Test JsMeter</title>
+    <script language="javascript" src="../src/JsMeter.js"></script>
+    <script language="javascript">
+        function sleep(milliseconds) {
+            var start = performance.now();
+            for (var i = 0; i < 1e7; i++) {
+                if ((performance.now() - start) > milliseconds) {
+                    break;
+                }
+            }
+        }
+
+        var results = JsMeter.Execute(function () { sleep(500) }, 1);
+        var result2 = JsMeter.ExecuteStadistic(function () { sleep(500) });
+    </script>
+</head>
+<body>
+    <script>
+        document.write(results);
+        document.write("<br/>")
+        document.write(result2.Average);
+        document.write("<br/>")
+        document.write(result2.Deviation);
+    </script>
+</body>
+</html>
