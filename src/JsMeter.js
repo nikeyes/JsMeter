@@ -29,76 +29,48 @@
                    function () { return new Date().getTime(); };
     };
 
-    // Programmer: Larry Battle 
-    // Date: Mar 06, 2011
-    // Purpose: Calculate standard deviation, variance, and average among an array of numbers.
-    var _IsArray = function (obj) {
-        return Object.prototype.toString.call(obj) === "[object Array]";
-    },
-    _GetNumWithSetDec = function (num, numOfDec) {
-        var pow10s = Math.pow(10, numOfDec || 0);
-        return (numOfDec) ? Math.round(pow10s * num) / pow10s : num;
-    },
-    _GetAverageFromNumArr = function (numArr, numOfDec) {
-        if (!_IsArray(numArr)) { return false; }
-        var i = numArr.length,
-            sum = 0;
-        while (i--) {
-            sum += numArr[i];
-        }
-        return _GetNumWithSetDec.call(this,(sum / numArr.length), numOfDec);
-    },
-    _GetVariance = function (numArr, numOfDec) {
-        if (!_IsArray(numArr)) { return false; }
-        var avg = _GetAverageFromNumArr(numArr, numOfDec),
-            i = numArr.length,
-            v = 0;
+    var _standardDeviation = function (values, precision) {
+        if (!precision) precision = 2;
 
-        while (i--) {
-            v += Math.pow((numArr[i] - avg), 2);
-        }
-        v /= numArr.length;
-        return _GetNumWithSetDec.call(this, v, numOfDec);
-    },
-    _GetStandardDeviation = function (numArr, numOfDec) {
-        if (!_IsArray(numArr)) { return false; }
-        var stdDev = Math.sqrt(_GetVariance(numArr, numOfDec));
-        return _GetNumWithSetDec.call(this, stdDev, numOfDec);
-    };
+        var avg = _average(values);
+        
+        var squareDiffs = values.map(function (value) {
+            var diff = value - avg;
+            var sqrDiff = diff * diff;
+            return sqrDiff;
+        });
+        
+        var avgSquareDiff = _average(squareDiffs);
+        
+        var stdDev = Math.sqrt(avgSquareDiff);
+        return stdDev.toFixed(precision);
+    }
+    
+    var _average = function (data, precision) {
+        if (!precision) precision = 2;
+        var sum = data.reduce(function (sum, value) {
+            return sum + value;
+        }, 0);
+        
+        var avg = sum / data.length;
+        return avg.toFixed(precision);
+    }
 
     JsMeter.prototype = {
         constructor: JsMeter,
 
-        ExecuteOnceTime: function (testFunction, iterations) {
-            var start,
-                end,
-                lapseTime;
-
-            start = performance.now();
-
-            for (var i = 0; i < iterations; i++) {
-                testFunction();
-            }
-
-            end = performance.now();
-
-            lapseTime = end - start;
-
-            return {
-                Average: lapseTime,
-                Variance: 0,
-                Deviation: 0
-            };
-        },
-
-        ExecuteMultipleTimes: function (testFunction) {
+        getExecutionTime: function (testFunction, iterations) {
             var start,
                 end,
                 lapseTime,
                 resultsArray = [],
+                executionTime,
+                deviation,
                 precision = 4;
+            
+            if (!iterations) iterations = 6;
 
-            for (var i = 0; i < 30; i++) {
+            for (var i = 0; i < iterations; i++) {
                 start = performance.now();
 
                 testFunction();
@@ -108,12 +80,16 @@
                 lapseTime = end - start;
 
                 resultsArray.push(lapseTime);
-            }
+            }            ;
+            
+            executionTime = _average.call(this, resultsArray, precision);
+            deviation = _standardDeviation.call(this, resultsArray, precision);
+
 
             return {
-                Average: _GetAverageFromNumArr.call(this, resultsArray, precision),
-                Variance: _GetVariance.call(this, resultsArray, precision),
-                Deviation: _GetStandardDeviation.call(this, resultsArray, precision)
+                ExecutionTime: executionTime,
+                Deviation: deviation,
+                DeviationPerCent: (deviation*100) / executionTime
             };
             
         },
