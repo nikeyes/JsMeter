@@ -66,6 +66,7 @@
                 resultsArray = [],
                 executionTime,
                 deviation,
+                deviationPerCent,
                 precision = 4;
             
             if (!iterations) iterations = 6;
@@ -84,14 +85,40 @@
             
             executionTime = _average.call(this, resultsArray, precision);
             deviation = _standardDeviation.call(this, resultsArray, precision);
+            deviationPerCent = (deviation * 100) / executionTime;
+            deviationPerCent = deviationPerCent.toFixed(precision);
 
 
             return {
                 ExecutionTime: executionTime,
                 Deviation: deviation,
-                DeviationPerCent: (deviation*100) / executionTime
+                DeviationPerCent: deviationPerCent
             };
             
+        },
+        
+        getOperationPerSecond: function (testFunction) {
+            var hz, 
+                period, 
+                startTime = new Date, 
+                runs = 0,
+                totalTime; 
+            
+            do {
+                // Code snippet goes here 
+                testFunction();
+                runs++;
+                totalTime = new Date- startTime;
+            } while (totalTime < 1000); 
+            // convert ms to seconds 
+            totalTime /= 1000;
+            // period → how long per operation 
+            period = totalTime / runs;
+            // hz → the number of operations per second 
+            hz = 1 / period;
+            // can be shortened to // hz = (runs * 1000) / totalTime;
+
+            return hz;
         },
 
         StartTracking: function (id) {
