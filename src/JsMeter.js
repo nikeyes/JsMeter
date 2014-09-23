@@ -64,7 +64,7 @@
         return Math.max.apply(Math, elements);
     };
 
-    var _getOperationPerSecond = function (testFunction)
+    var _getOperationsPerSecond = function (testFunction)
     {
         var hz, 
                 period, 
@@ -162,7 +162,7 @@
             
         },
         
-        getOperationPerSecond: function (testFunction) {
+        getOperationsPerSecond: function (testFunction) {
             var operPerSeconds,
                 resultsArray = [],
                 operPerSecond,
@@ -173,7 +173,7 @@
                 precision = 0;
 
             for (var i = 0; i < 5; i++) {
-                operPerSeconds = _getOperationPerSecond.call(this, testFunction)
+                operPerSeconds = _getOperationsPerSecond.call(this, testFunction)
                 resultsArray.push(operPerSeconds);
             };
 
@@ -193,7 +193,7 @@
             };
         },
 
-        StartTracking: function (id) {
+        startTracking: function (id) {
             var tracking = {
                 id: id,
                 startTime: performance.now(),
@@ -205,14 +205,14 @@
             this._trackingCollection.push(tracking);
         },
 
-        EndTracking: function (id) {
+        endTracking: function (id) {
             var tracking = _getTrackingById.call(this, id);
             tracking.endTime = performance.now();
             tracking.elapsedTime = tracking.endTime - tracking.startTime;
             this._totalElapsedTime += tracking.elapsedTime
         },
 
-        GetTrackings: function () {
+        getTrackings: function () {
             var len = this._trackingCollection.length,
                 tracking;
 

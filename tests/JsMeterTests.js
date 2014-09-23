@@ -28,7 +28,7 @@ describe('Dado JsMeter', function () {
 
     });
 
-    it('Cuando llamamos a getOperationPerSecond devuelve una estructura correcta', function () {
+    it('Cuando llamamos a getOperationsPerSecond devuelve una estructura correcta', function () {
         //Arrange
 
         var sut,
@@ -40,7 +40,7 @@ describe('Dado JsMeter', function () {
         sut = JsMeter;
         
         //Act
-        actual = sut.getOperationPerSecond(function () { var a = 1; });
+        actual = sut.getOperationsPerSecond(function () { var a = 1; });
 
         //Assert
         expect(actual).to.be.an('object');

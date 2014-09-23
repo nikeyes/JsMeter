@@ -7,19 +7,19 @@
     <script language="javascript">
         function CalculateFibonacciWithTracking()
         {
-            JsMeter.StartTracking("fibonacci_cached");
+            JsMeter.startTracking("fibonacci_cached");
 
             var fibCached = fibonacci_memoized(40);
             document.getElementById("fibCachedResult").innerHTML = fibCached;
 
-            JsMeter.EndTracking("fibonacci_cached");
+            JsMeter.endTracking("fibonacci_cached");
 
-            JsMeter.StartTracking("fibonacci");
+            JsMeter.startTracking("fibonacci");
 
             var fib = fibonacci(40);
             document.getElementById("fibResult").innerHTML = fib;
 
-            JsMeter.EndTracking("fibonacci");
+            JsMeter.endTracking("fibonacci");
         }
         
     </script>
