@@ -92,6 +92,29 @@
             
         return hz;
     };
+    
+    var _getTrackingById = function (id) {
+        var i=0,
+            found = false,
+            lengthCollection,
+            tracking;
+        
+        lengthCollection = this._trackingCollection.length;
+        while (!found && i < lengthCollection) {
+            tracking = this._trackingCollection[i];
+            if (tracking.id === id) {
+                found = true;
+            }
+            i++;
+        }
+
+        if (!found) {
+            throw Error("Tracking Id no existe: " + id);
+        }
+
+        return tracking;
+    };
+
 
     JsMeter.prototype = {
         constructor: JsMeter,
@@ -181,12 +204,12 @@
             
             this._trackingCollection.push(tracking);
         },
-        EndTracking: function () {
-            var tracking = this._trackingCollection.pop();
+
+        EndTracking: function (id) {
+            var tracking = _getTrackingById.call(this, id);
             tracking.endTime = performance.now();
             tracking.elapsedTime = tracking.endTime - tracking.startTime;
             this._totalElapsedTime += tracking.elapsedTime
-            this._trackingCollection.push(tracking);
         },
 
         GetTrackings: function () {
