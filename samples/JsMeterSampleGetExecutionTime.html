@@ -1,0 +1,61 @@
+<html>
+<head>
+    <title>Test JsMeter</title>
+    <link rel="stylesheet" href="tables.css" type="text/css">
+    <script language="javascript" src="../src/JsMeter.js"></script>
+	<script language="javascript" src="fibonacci.js"></script>
+    <script language="javascript">
+        function GenerarBenchmark()
+        {
+            var resultsFibMemo = JsMeter.getExecutionTime(function () { fibonacci_memoized(40); }, 5);
+
+            var resultsFib = JsMeter.getExecutionTime(function () { fibonacci(40); }, 5);
+
+            document.getElementById("fibExecutionTime").innerHTML = resultsFib.ExecutionTime;
+            document.getElementById("fibDeviation").innerHTML = resultsFib.Deviation;
+            document.getElementById("fibDeviationPerCent").innerHTML = resultsFib.DeviationPerCent + "%";;
+            document.getElementById("fibMinExecutionTime").innerHTML = resultsFib.MinExecutionTime;
+            document.getElementById("fibMaxExecutionTime").innerHTML = resultsFib.MaxExecutionTime;
+
+            document.getElementById("fibMemExecutionTime").innerHTML = resultsFibMemo.ExecutionTime;
+            document.getElementById("fibMemDeviation").innerHTML = resultsFibMemo.Deviation;
+            document.getElementById("fibMemDeviationPerCent").innerHTML = resultsFibMemo.DeviationPerCent + "%";;
+            document.getElementById("fibMemMinExecutionTime").innerHTML = resultsFibMemo.MinExecutionTime;
+            document.getElementById("fibMemMaxExecutionTime").innerHTML = resultsFibMemo.MaxExecutionTime;
+        }
+    </script>
+    
+</head>
+<body onload="GenerarBenchmark()">
+    <div style="width:60%;height:150px; text-align:center;">
+        <div class="CSSTableGenerator">
+            <table>
+                <tr>
+                    <td></td>
+                    <td>ExecutionTime (ms)</td>
+                    <td>Deviation (ms)</td>
+                    <td>DeviationPerCent (%)</td>
+                    <td>MinExecutionTime (ms)</td>
+                    <td>MaxExecutionTime (ms)</td>
+                </tr>
+                <tr>
+                    <td>Fibonacci</td>
+                    <td id="fibExecutionTime"></td>
+                    <td id="fibDeviation"></td>
+                    <td id="fibDeviationPerCent"></td>
+                    <td id="fibMinExecutionTime"></td>
+                    <td id="fibMaxExecutionTime"></td>
+                </tr>
+                <tr>
+                    <td>Fibonacci Con Cache</td>
+                    <td id="fibMemExecutionTime"></td>
+                    <td id="fibMemDeviation"></td>
+                    <td id="fibMemDeviationPerCent"></td>
+                    <td id="fibMemMinExecutionTime"></td>
+                    <td id="fibMemMaxExecutionTime"></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

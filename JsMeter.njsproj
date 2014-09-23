@@ -33,10 +33,9 @@
   <ItemGroup>
     <Content Include="lib\mocha\mocha.css" />
     <Content Include="README.md" />
-    <Content Include="samples\JsMeterSample.html" />
-    <Content Include="samples\JsMeterSampleFunctionWithParameter.html" />
+    <Content Include="samples\JsMeterSampleGetExecutionTime.html" />
+    <Content Include="samples\JsMeterSampleGetOperationPerSecond.html" />
     <Content Include="samples\JsMeterSampleTracking.html" />
-    <Content Include="samples\JsMeterSleepSample.html" />
     <Content Include="tests\index.html" />
   </ItemGroup>
   <ItemGroup>
@@ -50,6 +49,7 @@
   <ItemGroup>
     <Compile Include="lib\chai\chai.js" />
     <Compile Include="lib\mocha\mocha.js" />
+    <Compile Include="samples\fibonacci.js" />
     <Compile Include="src\JsMeter.js" />
     <Compile Include="tests\JsMeterTests.js" />
   </ItemGroup>

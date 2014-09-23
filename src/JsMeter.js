@@ -125,7 +125,7 @@
             executionTime = _average.call(this, resultsArray, precision);
             deviation = _standardDeviation.call(this, resultsArray, precision);
             deviationPerCent = (deviation * 100) / executionTime;
-            deviationPerCent = deviationPerCent.toFixed(precision);
+            deviationPerCent = deviationPerCent.toFixed(0);
             minExecutionTime = _minValueOfArray(resultsArray).toFixed(precision);;
             maxExecutionTime = _maxValueOfArray(resultsArray).toFixed(precision);;
 
@@ -147,7 +147,7 @@
                 deviationPerCent,
                 minOperPerSecond,
                 maxOperPerSecond,
-                precision = 4;
+                precision = 0;
 
             for (var i = 0; i < 5; i++) {
                 operPerSeconds = _getOperationPerSecond.call(this, testFunction)
@@ -157,7 +157,7 @@
             operPerSecond = _average.call(this, resultsArray, precision);
             deviation = _standardDeviation.call(this, resultsArray, precision);
             deviationPerCent = (deviation * 100) / operPerSecond;
-            deviationPerCent = deviationPerCent.toFixed(precision);
+            deviationPerCent = deviationPerCent.toFixed(0);
             minOperPerSecond = _minValueOfArray(resultsArray).toFixed(precision);
             maxOperPerSecond = _maxValueOfArray(resultsArray).toFixed(precision);
 

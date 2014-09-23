@@ -1,0 +1,61 @@
+<html>
+<head>
+    <title>Test JsMeter</title>
+    <link rel="stylesheet" href="tables.css" type="text/css">
+    <script language="javascript" src="../src/JsMeter.js"></script>
+	<script language="javascript" src="fibonacci.js"></script>
+    <script language="javascript">
+        function GenerarBenchmark()
+        {
+            var resultsFibMemo = JsMeter.getOperationPerSecond(function () { fibonacci_memoized(40); });
+
+            var resultsFib = JsMeter.getOperationPerSecond(function () { fibonacci(40); });
+
+            document.getElementById("fibOperPerSecond").innerHTML = resultsFib.OperPerSecond;
+            document.getElementById("fibDeviation").innerHTML = resultsFib.Deviation;
+            document.getElementById("fibDeviationPerCent").innerHTML = resultsFib.DeviationPerCent + "%";;
+            document.getElementById("fibMinOperPerSecond").innerHTML = resultsFib.MinOperPerSecond;
+            document.getElementById("fibMaxOperPerSecond").innerHTML = resultsFib.MaxOperPerSecond;
+
+            document.getElementById("fibMemOperPerSecond").innerHTML = resultsFibMemo.OperPerSecond;
+            document.getElementById("fibMemDeviation").innerHTML = resultsFibMemo.Deviation;
+            document.getElementById("fibMemDeviationPerCent").innerHTML = resultsFibMemo.DeviationPerCent + "%";;
+            document.getElementById("fibMemMinOperPerSecond").innerHTML = resultsFibMemo.MinOperPerSecond;
+            document.getElementById("fibMemMaxOperPerSecond").innerHTML = resultsFibMemo.MaxOperPerSecond;
+        }
+    </script>
+    
+</head>
+<body onload="GenerarBenchmark()">
+    <div style="width:60%;height:150px; text-align:center;">
+        <div class="CSSTableGenerator">
+            <table>
+                <tr>
+                    <td></td>
+                    <td>OperPerSecond (op/s)</td>
+                    <td>Deviation (op/s)</td>
+                    <td>DeviationPerCent (%)</td>
+                    <td>MinOperPerSecond (op/s)</td>
+                    <td>MaxOperPerSecond (op/s)</td>
+                </tr>
+                <tr>
+                    <td>Fibonacci</td>
+                    <td id="fibOperPerSecond"></td>
+                    <td id="fibDeviation"></td>
+                    <td id="fibDeviationPerCent"></td>
+                    <td id="fibMinOperPerSecond"></td>
+                    <td id="fibMaxOperPerSecond"></td>
+                </tr>
+                <tr>
+                    <td>Fibonacci Con Cache</td>
+                    <td id="fibMemOperPerSecond"></td>
+                    <td id="fibMemDeviation"></td>
+                    <td id="fibMemDeviationPerCent"></td>
+                    <td id="fibMemMinOperPerSecond"></td>
+                    <td id="fibMemMaxOperPerSecond"></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
