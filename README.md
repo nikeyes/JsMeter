@@ -3,10 +3,7 @@ JsMeter v0.1
 
 Simple Medidor de Rendimiento JS
 
-getExecutionTime -> Devuelve los milisegundos que tarda en ejecutarse la función. Ver: https://github.com/nikeyes/JsMeter/tree/master/samples/JsMeterSampleGetExecutionTime.html
-getOperationsPerSecond -> Devuleve las veces por segundo que se ha podido ejecutar la función pasada como parámetro. Ver: https://github.com/nikeyes/JsMeter/tree/master/samples/JsMeterSampleGetOperationPerSecond.html
-startTracking/endTracking -> Calculan el tiempo transcurrido entre la llamada a start y la llamada a end. Para ver el resultad hay que llamar a JsMeter.getTrackings(); Ver: https://github.com/nikeyes/JsMeter/tree/master/samples/JsMeterSampleTracking.html
-
+getExecutionTime -> Devuelve los milisegundos que tarda en ejecutarse la funciÃ³n. Ver: https://github.com/nikeyes/JsMeter/tree/master/samples/JsMeterSampleGetExecutionTime.html
 
 Estructura devuelta por getExecutionTime:
 {
@@ -17,6 +14,8 @@ Estructura devuelta por getExecutionTime:
     MaxExecutionTime: maxExecutionTime,
 };
 
+getOperationsPerSecond -> Devuleve las veces por segundo que se ha podido ejecutar la funciÃ³n pasada como parÃ¡metro. Ver: https://github.com/nikeyes/JsMeter/tree/master/samples/JsMeterSampleGetOperationPerSecond.html
+
 Estructura devuelta por getOperationsPerSecond:
 {
     OperPerSecond: operPerSecond,
@@ -25,6 +24,9 @@ Estructura devuelta por getOperationsPerSecond:
     MinOperPerSecond: minOperPerSecond,
     MaxOperPerSecond: maxOperPerSecond,
 };
+
+
+startTracking/endTracking -> Calculan el tiempo transcurrido entre la llamada a start y la llamada a end. Para ver el resultad hay que llamar a JsMeter.getTrackings(); Ver: https://github.com/nikeyes/JsMeter/tree/master/samples/JsMeterSampleTracking.html
 
 Estructura devuelta por getTrackings:
 [{
