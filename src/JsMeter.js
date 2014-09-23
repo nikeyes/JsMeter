@@ -44,7 +44,7 @@
         
         var stdDev = Math.sqrt(avgSquareDiff);
         return stdDev.toFixed(precision);
-    }
+    };
     
     var _average = function (data, precision) {
         if (!precision) precision = 2;
@@ -54,7 +54,44 @@
         
         var avg = sum / data.length;
         return avg.toFixed(precision);
-    }
+    };
+
+    var _minValueOfArray = function (elements) {
+        return Math.min.apply(Math, elements);
+    };
+
+    var _maxValueOfArray = function (elements) {
+        return Math.max.apply(Math, elements);
+    };
+
+    var _getOperationPerSecond = function (testFunction)
+    {
+        var hz, 
+                period, 
+                startTime = new Date, 
+                runs = 0,
+                totalTime; 
+            
+        do {
+
+            testFunction();
+
+            runs++;
+            totalTime = new Date - startTime;
+
+        } while (totalTime < 1000);
+
+        // convert ms to seconds 
+        totalTime /= 1000;
+
+        // period → how long per operation 
+        period = totalTime / runs;
+
+        // hz → the number of operations per second 
+        hz = 1 / period;
+            
+        return hz;
+    };
 
     JsMeter.prototype = {
         constructor: JsMeter,
@@ -67,6 +104,8 @@
                 executionTime,
                 deviation,
                 deviationPerCent,
+                minExecutionTime,
+                maxExecutionTime,
                 precision = 4;
             
             if (!iterations) iterations = 6;
@@ -81,44 +120,54 @@
                 lapseTime = end - start;
 
                 resultsArray.push(lapseTime);
-            }            ;
+            };
             
             executionTime = _average.call(this, resultsArray, precision);
             deviation = _standardDeviation.call(this, resultsArray, precision);
             deviationPerCent = (deviation * 100) / executionTime;
             deviationPerCent = deviationPerCent.toFixed(precision);
-
+            minExecutionTime = _minValueOfArray(resultsArray).toFixed(precision);;
+            maxExecutionTime = _maxValueOfArray(resultsArray).toFixed(precision);;
 
             return {
                 ExecutionTime: executionTime,
                 Deviation: deviation,
-                DeviationPerCent: deviationPerCent
+                DeviationPerCent: deviationPerCent,
+                MinExecutionTime: minExecutionTime,
+                MaxExecutionTime: maxExecutionTime,
             };
             
         },
         
         getOperationPerSecond: function (testFunction) {
-            var hz, 
-                period, 
-                startTime = new Date, 
-                runs = 0,
-                totalTime; 
-            
-            do {
-                // Code snippet goes here 
-                testFunction();
-                runs++;
-                totalTime = new Date- startTime;
-            } while (totalTime < 1000); 
-            // convert ms to seconds 
-            totalTime /= 1000;
-            // period → how long per operation 
-            period = totalTime / runs;
-            // hz → the number of operations per second 
-            hz = 1 / period;
-            // can be shortened to // hz = (runs * 1000) / totalTime;
+            var operPerSeconds,
+                resultsArray = [],
+                operPerSecond,
+                deviation,
+                deviationPerCent,
+                minOperPerSecond,
+                maxOperPerSecond,
+                precision = 4;
 
-            return hz;
+            for (var i = 0; i < 5; i++) {
+                operPerSeconds = _getOperationPerSecond.call(this, testFunction)
+                resultsArray.push(operPerSeconds);
+            };
+
+            operPerSecond = _average.call(this, resultsArray, precision);
+            deviation = _standardDeviation.call(this, resultsArray, precision);
+            deviationPerCent = (deviation * 100) / operPerSecond;
+            deviationPerCent = deviationPerCent.toFixed(precision);
+            minOperPerSecond = _minValueOfArray(resultsArray).toFixed(precision);
+            maxOperPerSecond = _maxValueOfArray(resultsArray).toFixed(precision);
+
+            return {
+                OperPerSecond: operPerSecond,
+                Deviation: deviation,
+                DeviationPerCent: deviationPerCent,
+                MinOperPerSecond: minOperPerSecond,
+                MaxOperPerSecond: maxOperPerSecond,
+            };
         },
 
         StartTracking: function (id) {
