@@ -1,7 +1,7 @@
 JsMeter v0.1
 =======
 
-Simple Medidor de Rendimiento JS
+Simple Medidor de Rendimiento JS 
 
 getExecutionTime -> Devuelve los milisegundos que tarda en ejecutarse la función. Ver: https://github.com/nikeyes/JsMeter/tree/master/samples/JsMeterSampleGetExecutionTime.html
 
