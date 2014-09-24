@@ -38,7 +38,7 @@ Estructura devuelta por getOperationsPerSecond:
 Calculan el tiempo transcurrido entre la llamada a start y la llamada a end. Para ver el resultad hay que llamar a JsMeter.getTrackings(); Ver: https://github.com/nikeyes/JsMeter/tree/master/samples/JsMeterSampleTracking.html
 
 ```
-Estructura devuelta por getTrackings:
+Array devuelto por getTrackings:
 [{
     id: ,
     startTime: ,
