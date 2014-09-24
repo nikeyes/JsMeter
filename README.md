@@ -1,7 +1,7 @@
 JsMeter v0.3
 =======
 
-Simple Medidor de Rendimiento JS 
+Mini Medidor de Rendimiento JS 
 
 getExecutionTime
 =======
