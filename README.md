@@ -1,4 +1,4 @@
-JsMeter v0.1
+JsMeter v0.3
 =======
 
 Simple Medidor de Rendimiento JS 
