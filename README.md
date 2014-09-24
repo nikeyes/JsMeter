@@ -22,6 +22,7 @@ getOperationsPerSecond
 =======
 Devuleve las veces por segundo que se ha podido ejecutar la función pasada como parámetro. Ver: https://github.com/nikeyes/JsMeter/tree/master/samples/JsMeterSampleGetOperationPerSecond.html
 
+```
 Estructura devuelta por getOperationsPerSecond:
 {
     OperPerSecond: operPerSecond,
@@ -30,12 +31,13 @@ Estructura devuelta por getOperationsPerSecond:
     MinOperPerSecond: minOperPerSecond,
     MaxOperPerSecond: maxOperPerSecond,
 };
-
+```
 
 startTracking/endTracking
 =======
 Calculan el tiempo transcurrido entre la llamada a start y la llamada a end. Para ver el resultad hay que llamar a JsMeter.getTrackings(); Ver: https://github.com/nikeyes/JsMeter/tree/master/samples/JsMeterSampleTracking.html
 
+```
 Estructura devuelta por getTrackings:
 [{
     id: ,
@@ -44,3 +46,4 @@ Estructura devuelta por getTrackings:
     elapsedTime: ,
     percentOverTotal: 
 }, ......]
+```
