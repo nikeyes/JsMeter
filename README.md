@@ -7,7 +7,7 @@ getExecutionTime
 =======
 Devuelve los milisegundos que tarda en ejecutarse la función. Ver: https://github.com/nikeyes/JsMeter/tree/master/samples/JsMeterSampleGetExecutionTime.html
 
-'''
+```
 Estructura devuelta por getExecutionTime:
 {
     ExecutionTime: executionTime,
@@ -16,7 +16,7 @@ Estructura devuelta por getExecutionTime:
     MinExecutionTime: minExecutionTime,
     MaxExecutionTime: maxExecutionTime,
 };
-'''
+```
 
 getOperationsPerSecond
 =======
