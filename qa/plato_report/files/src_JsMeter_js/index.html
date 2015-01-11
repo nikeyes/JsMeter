@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - src\JsMeter.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>src\JsMeter.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">64.44</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">222</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">52.28</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">1.66</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">/**
+ * JsMeter. Simple performance Meter for JS
+ * Returns the milliseconds it takes to execute a function
+ *
+ * Version 1.0.0, 2014-09-14
+ * By Jorge Castro
+ * https://github.com/nikeyes/JsMeter
+ * 
+ */
+
+(function (ns) {
+    &quot;use strict&quot;;
+    var JsMeter = function () {
+        _CreatePolyfillPerformanceObject.call(this);
+        this._trackingCollection = [];
+        this._totalElapsedTime = 0;
+    };
+
+    
+    var _CreatePolyfillPerformanceObject = function () {
+        /*Compatibility with &lt; IE10 Chome20, Firefox15 : https://developer.mozilla.org/en-US/docs/Web/API/Performance.now
+        * Based on: http://gent.ilcore.com/2012/06/better-timer-for-javascript.html
+        */
+
+        ns.performance = window.performance || {};
+        ns.performance.now = window.performance.now ||
+                   window.performance.mozNow ||
+                   window.performance.msNow ||
+                   window.performance.oNow ||
+                   window.performance.webkitNow ||
+                   function () { return new Date().getTime(); };
+    };
+
+    var _standardDeviation = function (values, precision) {
+        if (!precision) precision = 2;
+
+        var avg = _average(values);
+        
+        var squareDiffs = values.map(function (value) {
+            var diff = value - avg;
+            var sqrDiff = diff * diff;
+            return sqrDiff;
+        });
+        
+        var avgSquareDiff = _average(squareDiffs);
+        
+        var stdDev = Math.sqrt(avgSquareDiff);
+        return stdDev.toFixed(precision);
+    };
+    
+    var _average = function (data, precision) {
+        if (!precision) precision = 2;
+        var sum = data.reduce(function (sum, value) {
+            return sum + value;
+        }, 0);
+        
+        var avg = sum / data.length;
+        return avg.toFixed(precision);
+    };
+
+    var _minValueOfArray = function (elements) {
+        return Math.min.apply(Math, elements);
+    };
+
+    var _maxValueOfArray = function (elements) {
+        return Math.max.apply(Math, elements);
+    };
+
+    var _getOperationsPerSecond = function (testFunction)
+    {
+        var hz, 
+                period, 
+                startTime = new Date(), 
+                runs = 0,
+                totalTime; 
+            
+        do {
+
+            testFunction();
+
+            runs++;
+            totalTime = new Date() - startTime;
+
+        } while (totalTime &lt; 1000);
+
+        // convert ms to seconds 
+        totalTime /= 1000;
+
+        // period → how long per operation 
+        period = totalTime / runs;
+
+        // hz → the number of operations per second 
+        hz = 1 / period;
+            
+        return hz;
+    };
+    
+    var _getTrackingById = function (id) {
+        var i=0,
+            found = false,
+            lengthCollection,
+            tracking;
+        
+        lengthCollection = this._trackingCollection.length;
+        while (!found &amp;&amp; i &lt; lengthCollection) {
+            tracking = this._trackingCollection[i];
+            if (tracking.id === id) {
+                found = true;
+            }
+            i++;
+        }
+
+        if (!found) {
+            throw Error(&quot;Tracking Id no existe: &quot; + id);
+        }
+
+        return tracking;
+    };
+
+
+    JsMeter.prototype = {
+        constructor: JsMeter,
+
+        getExecutionTime: function (testFunction, iterations) {
+            var start,
+                end,
+                lapseTime,
+                resultsArray = [],
+                executionTime,
+                deviation,
+                deviationPerCent,
+                minExecutionTime,
+                maxExecutionTime,
+                precision = 4;
+            
+            if (!iterations) iterations = 6;
+
+            for (var i = 0; i &lt; iterations; i++) {
+                start = ns.performance.now();
+
+                testFunction();
+
+                end = ns.performance.now();
+
+                lapseTime = end - start;
+
+                resultsArray.push(lapseTime);
+            }
+            
+            executionTime = _average.call(this, resultsArray, precision);
+            deviation = _standardDeviation.call(this, resultsArray, precision);
+            deviationPerCent = (deviation * 100) / executionTime;
+            deviationPerCent = deviationPerCent.toFixed(0);
+            minExecutionTime = _minValueOfArray(resultsArray).toFixed(precision);
+            maxExecutionTime = _maxValueOfArray(resultsArray).toFixed(precision);
+
+            return {
+                ExecutionTime: executionTime,
+                Deviation: deviation,
+                DeviationPerCent: deviationPerCent,
+                MinExecutionTime: minExecutionTime,
+                MaxExecutionTime: maxExecutionTime,
+            };
+            
+        },
+        
+        getOperationsPerSecond: function (testFunction) {
+            var operPerSeconds,
+                resultsArray = [],
+                operPerSecond,
+                deviation,
+                deviationPerCent,
+                minOperPerSecond,
+                maxOperPerSecond,
+                precision = 0;
+
+            for (var i = 0; i &lt; 5; i++) {
+                operPerSeconds = _getOperationsPerSecond.call(this, testFunction);
+                resultsArray.push(operPerSeconds);
+            }
+
+            operPerSecond = _average.call(this, resultsArray, precision);
+            deviation = _standardDeviation.call(this, resultsArray, precision);
+            deviationPerCent = (deviation * 100) / operPerSecond;
+            deviationPerCent = deviationPerCent.toFixed(0);
+            minOperPerSecond = _minValueOfArray(resultsArray).toFixed(precision);
+            maxOperPerSecond = _maxValueOfArray(resultsArray).toFixed(precision);
+
+            return {
+                OperPerSecond: operPerSecond,
+                Deviation: deviation,
+                DeviationPerCent: deviationPerCent,
+                MinOperPerSecond: minOperPerSecond,
+                MaxOperPerSecond: maxOperPerSecond,
+            };
+        },
+
+        startTracking: function (id) {
+            var tracking = {
+                id: id,
+                startTime: ns.performance.now(),
+                endTime: 0,
+                elapsedTime: 0,
+                percentOverTotal: 0
+            };
+            
+            this._trackingCollection.push(tracking);
+        },
+
+        endTracking: function (id) {
+            var tracking = _getTrackingById.call(this, id);
+            tracking.endTime = ns.performance.now();
+            tracking.elapsedTime = tracking.endTime - tracking.startTime;
+            this._totalElapsedTime += tracking.elapsedTime;
+        },
+
+        getTrackings: function () {
+            var len = this._trackingCollection.length,
+                tracking;
+
+            for (var i = 0; i &lt; len; i++) {
+                tracking = this._trackingCollection[i];
+                tracking.percentOverTotal = (tracking.elapsedTime / this._totalElapsedTime) * 100;
+            }
+            return this._trackingCollection;
+        }
+    };
+
+    //Publish object in namespace
+    ns.JsMeter = new JsMeter();
+
+}(window));</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ complexity.cyclomatic }} <br>
+    Length : {{ complexity.halstead.length }} <br>
+    Difficulty : {{ complexity.halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ complexity.halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>
