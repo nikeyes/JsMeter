@@ -11,13 +11,13 @@ describe('Dado JsMeter', function () {
     it('Cuando llamamos a getExecutionTime devuelve una estructura correcta', function () {
         //Arrange
         var sut,
-			actual;
-
+            actual;
+        
         sut = JsMeter;
-
+        
         //Act
         actual = sut.getExecutionTime(function () { var a = 1; });
-
+        
         //Assert
         expect(actual).to.be.an('object');
         expect(actual, 'Propiedad ExecutionTime no existe').to.have.property('ExecutionTime');
@@ -27,21 +27,21 @@ describe('Dado JsMeter', function () {
         expect(actual, 'Propiedad MaxExecutionTime no existe').to.have.property('MaxExecutionTime');
 
     });
-
+    
     it('Cuando llamamos a getOperationsPerSecond devuelve una estructura correcta', function () {
         //Arrange
-
+        
         var sut,
             actual;
-
+        
         /*El método hace 5 ejecucuiones de 1000 milisegundos*/
-        this.timeout(5001);
-
+        this.timeout(6001);
+        
         sut = JsMeter;
         
         //Act
         actual = sut.getOperationsPerSecond(function () { var a = 1; });
-
+        
         //Assert
         expect(actual).to.be.an('object');
         expect(actual, 'Propiedad ExecutionTime no existe').to.have.property('OperPerSecond');
@@ -51,4 +51,4 @@ describe('Dado JsMeter', function () {
         expect(actual, 'Propiedad MaxExecutionTime no existe').to.have.property('MinOperPerSecond');
 
     });
-})
+});

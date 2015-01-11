@@ -7,6 +7,7 @@
  * https://github.com/nikeyes/JsMeter
  * 
  */
+
 (function (ns) {
     "use strict";
     var JsMeter = function () {
@@ -20,12 +21,13 @@
         /*Compatibility with < IE10 Chome20, Firefox15 : https://developer.mozilla.org/en-US/docs/Web/API/Performance.now
         * Based on: http://gent.ilcore.com/2012/06/better-timer-for-javascript.html
         */
+
         ns.performance = window.performance || {};
-        ns.performance.now = performance.now ||
-                   performance.mozNow ||
-                   performance.msNow ||
-                   performance.oNow ||
-                   performance.webkitNow ||
+        ns.performance.now = window.performance.now ||
+                   window.performance.mozNow ||
+                   window.performance.msNow ||
+                   window.performance.oNow ||
+                   window.performance.webkitNow ||
                    function () { return new Date().getTime(); };
     };
 
@@ -68,7 +70,7 @@
     {
         var hz, 
                 period, 
-                startTime = new Date, 
+                startTime = new Date(), 
                 runs = 0,
                 totalTime; 
             
@@ -77,7 +79,7 @@
             testFunction();
 
             runs++;
-            totalTime = new Date - startTime;
+            totalTime = new Date() - startTime;
 
         } while (totalTime < 1000);
 
@@ -134,23 +136,23 @@
             if (!iterations) iterations = 6;
 
             for (var i = 0; i < iterations; i++) {
-                start = performance.now();
+                start = ns.performance.now();
 
                 testFunction();
 
-                end = performance.now();
+                end = ns.performance.now();
 
                 lapseTime = end - start;
 
                 resultsArray.push(lapseTime);
-            };
+            }
             
             executionTime = _average.call(this, resultsArray, precision);
             deviation = _standardDeviation.call(this, resultsArray, precision);
             deviationPerCent = (deviation * 100) / executionTime;
             deviationPerCent = deviationPerCent.toFixed(0);
-            minExecutionTime = _minValueOfArray(resultsArray).toFixed(precision);;
-            maxExecutionTime = _maxValueOfArray(resultsArray).toFixed(precision);;
+            minExecutionTime = _minValueOfArray(resultsArray).toFixed(precision);
+            maxExecutionTime = _maxValueOfArray(resultsArray).toFixed(precision);
 
             return {
                 ExecutionTime: executionTime,
@@ -173,9 +175,9 @@
                 precision = 0;
 
             for (var i = 0; i < 5; i++) {
-                operPerSeconds = _getOperationsPerSecond.call(this, testFunction)
+                operPerSeconds = _getOperationsPerSecond.call(this, testFunction);
                 resultsArray.push(operPerSeconds);
-            };
+            }
 
             operPerSecond = _average.call(this, resultsArray, precision);
             deviation = _standardDeviation.call(this, resultsArray, precision);
@@ -196,7 +198,7 @@
         startTracking: function (id) {
             var tracking = {
                 id: id,
-                startTime: performance.now(),
+                startTime: ns.performance.now(),
                 endTime: 0,
                 elapsedTime: 0,
                 percentOverTotal: 0
@@ -207,9 +209,9 @@
 
         endTracking: function (id) {
             var tracking = _getTrackingById.call(this, id);
-            tracking.endTime = performance.now();
+            tracking.endTime = ns.performance.now();
             tracking.elapsedTime = tracking.endTime - tracking.startTime;
-            this._totalElapsedTime += tracking.elapsedTime
+            this._totalElapsedTime += tracking.elapsedTime;
         },
 
         getTrackings: function () {
